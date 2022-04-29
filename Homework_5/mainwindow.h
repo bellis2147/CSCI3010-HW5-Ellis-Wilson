@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsView>
+#include "game.h"
+#include "item.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,9 +16,26 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    void Game_Loop();
     ~MainWindow();
 
+private slots:
+    void ItemSelectedSlot(Item *p);
+    void PlaceItemSlot();
+    void QuitSlot();
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui_;
+    QGraphicsView *view_;
+    QGraphicsScene *scene_;
+    QGraphicsView *view_2_;
+    QGraphicsScene *scene_2_;
+    QGraphicsView *view_3_;
+    QGraphicsScene *scene_3_;
+    QGraphicsView *view_4_;
+    QGraphicsScene *scene_4_;
+    Item * curr_item_;
+    bool quit_;
+
+    Game *game_;
 };
 #endif // MAINWINDOW_H
