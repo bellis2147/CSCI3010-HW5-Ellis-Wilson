@@ -70,7 +70,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Current Player</string>
+     <string>Current Player:</string>
     </property>
    </widget>
    <widget class="QLabel" name="coordinates_label">
@@ -86,12 +86,12 @@
      <string>Enter coordinates</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="coordinates_entered">
+   <widget class="QLineEdit" name="attack_input_x">
     <property name="geometry">
      <rect>
       <x>350</x>
       <y>220</y>
-      <width>113</width>
+      <width>41</width>
       <height>20</height>
      </rect>
     </property>
@@ -115,7 +115,7 @@
       <x>360</x>
       <y>250</y>
       <width>80</width>
-      <height>31</height>
+      <height>18</height>
      </rect>
     </property>
     <property name="text">
@@ -161,7 +161,7 @@
       <x>310</x>
       <y>520</y>
       <width>80</width>
-      <height>31</height>
+      <height>18</height>
      </rect>
     </property>
     <property name="text">
@@ -178,7 +178,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="Start_Game">
+   <widget class="QPushButton" name="start_game">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -305,6 +305,29 @@
      <string>Row</string>
     </property>
    </widget>
+   <widget class="QLabel" name="current_player_num">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>150</y>
+      <width>37</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="attack_input_y">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>220</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -312,7 +335,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuBattleship">
