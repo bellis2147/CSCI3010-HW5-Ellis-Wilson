@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsView>
+#include <QPainter>
 #include "game.h"
 #include "item.h"
 
@@ -17,12 +18,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     void Game_Loop();
+     virtual void paintEvent(QPaintEvent *event);
     ~MainWindow();
 
 private slots:
     void ItemSelectedSlot(Item *p);
     void PlaceItemSlot();
     void QuitSlot();
+    void start_game();
 private:
     Ui::MainWindow *ui_;
     QGraphicsView *view_;
