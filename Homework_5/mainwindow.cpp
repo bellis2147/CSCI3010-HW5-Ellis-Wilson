@@ -201,7 +201,35 @@ void MainWindow::Game_Loop(){
     }
 }
 */
+int letterToNumber(std::string new_x)
+{
+    int new_x_int = 1;
+    if(new_x == "A" || new_x == "a")
+        new_x_int = 1;
+    else if(new_x == "B"|| new_x == "b")
+        new_x_int = 2;
+    else if(new_x == "C" || new_x == "c")
+        new_x_int = 3;
+    else if(new_x == "D" || new_x == "d")
+        new_x_int = 4;
+    else if(new_x == "E" || new_x == "e")
+        new_x_int = 5;
+    else if(new_x == "F" || new_x == "f")
+        new_x_int = 6;
+    else if(new_x == "G" || new_x == "g")
+        new_x_int = 7;
+    else if(new_x == "H" || new_x == "h")
+        new_x_int = 8;
+    else if(new_x == "I" || new_x == "i")
+        new_x_int = 9;
+    else if(new_x == "J" || new_x == "j")
+        new_x_int = 10;
+    else
+        new_x_int = 1;
 
+
+    return new_x_int;
+}
 void MainWindow::ItemSelectedSlot(Item *p) {
     curr_item_ = p;
 }
@@ -224,41 +252,21 @@ void MainWindow::AttackSlot(){
     if(ui_->current_player_num->text() == "1"){
         std::string new_x = ui_->attack_input_x->text().toStdString();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
-        int new_x_int = 1;
-        if(new_x == "A" || new_x == "a")
-            new_x_int = 1;
-        else if(new_x == "B"|| new_x == "b")
-            new_x_int = 2;
-        else if(new_x == "C" || new_x == "c")
-            new_x_int = 3;
-        else if(new_x == "D" || new_x == "d")
-            new_x_int = 4;
-        else if(new_x == "E" || new_x == "e")
-            new_x_int = 5;
-        else if(new_x == "F" || new_x == "f")
-            new_x_int = 6;
-        else if(new_x == "G" || new_x == "g")
-            new_x_int = 7;
-        else if(new_x == "H" || new_x == "h")
-            new_x_int = 8;
-        else if(new_x == "I" || new_x == "i")
-            new_x_int = 9;
-        else if(new_x == "J" || new_x == "j")
-            new_x_int = 10;
-        else
-            new_x_int = 1;
+
+        int new_x_int = letterToNumber(new_x);
+
         new_x_int = new_x_int*29;
         int check_hit = 0;
         for(int i = 0; i < 9; i++){
             if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
-                Item* hit_item = new Item(QColor(255,0,0), new_x_int, new_y, 29, 29);
+                Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                 scene_2_->addItem(hit_item);
                 check_hit++;
                 break;
             }
         }
         if (check_hit == 0){
-            Item* missed_item = new Item(QColor(128,128,128), new_x_int, new_y, 29, 29);
+            Item* missed_item = new Item(miss, new_x_int, new_y, 29, 29);
             scene_2_->addItem(missed_item);
         }
 
@@ -268,41 +276,21 @@ void MainWindow::AttackSlot(){
     else{
         std::string new_x = ui_->attack_input_x->text().toStdString();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
-        int new_x_int = 1;
-        if(new_x == "A" || new_x == "a")
-            new_x_int = 1;
-        else if(new_x == "B"|| new_x == "b")
-            new_x_int = 2;
-        else if(new_x == "C" || new_x == "c")
-            new_x_int = 3;
-        else if(new_x == "D" || new_x == "d")
-            new_x_int = 4;
-        else if(new_x == "E" || new_x == "e")
-            new_x_int = 5;
-        else if(new_x == "F" || new_x == "f")
-            new_x_int = 6;
-        else if(new_x == "G" || new_x == "g")
-            new_x_int = 7;
-        else if(new_x == "H" || new_x == "h")
-            new_x_int = 8;
-        else if(new_x == "I" || new_x == "i")
-            new_x_int = 9;
-        else if(new_x == "J" || new_x == "j")
-            new_x_int = 10;
-        else
-            new_x_int = 1;
+
+        int new_x_int = letterToNumber(new_x);
+
         new_x_int = new_x_int*29;
         int check_hit = 0;
         for(int i = 0; i < 9; i++){
             if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
-                Item* hit_item = new Item(QColor(255,0,0), new_x_int, new_y, 29, 29);
+                Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                 scene_->addItem(hit_item);
                 check_hit++;
                 break;
             }
         }
         if (check_hit == 0){
-            Item* missed_item = new Item(QColor(128,128,128), new_x_int, new_y, 29, 29);
+            Item* missed_item = new Item(miss, new_x_int, new_y, 29, 29);
             scene_->addItem(missed_item);
         }
         ui_->current_player_num->setText("1");
@@ -333,29 +321,9 @@ void MainWindow::PlaceItemSlot1() {
     {
         std::string new_x = ui_->ship_input_x->text().toStdString();
         int new_y = (ui_->ship_input_y->text().toInt())*29;
-        int new_x_int = 1;
-        if(new_x == "A" || new_x == "a")
-            new_x_int = 1;
-        else if(new_x == "B"|| new_x == "b")
-            new_x_int = 2;
-        else if(new_x == "C" || new_x == "c")
-            new_x_int = 3;
-        else if(new_x == "D" || new_x == "d")
-            new_x_int = 4;
-        else if(new_x == "E" || new_x == "e")
-            new_x_int = 5;
-        else if(new_x == "F" || new_x == "f")
-            new_x_int = 6;
-        else if(new_x == "G" || new_x == "g")
-            new_x_int = 7;
-        else if(new_x == "H" || new_x == "h")
-            new_x_int = 8;
-        else if(new_x == "I" || new_x == "i")
-            new_x_int = 9;
-        else if(new_x == "J" || new_x == "j")
-            new_x_int = 10;
-        else
-            new_x_int = 1;
+
+        int new_x_int = letterToNumber(new_x);
+
         new_x_int = new_x_int*29;
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);
@@ -370,29 +338,9 @@ void MainWindow::PlaceItemSlot2() {
     {
         std::string new_x = ui_->ship_input_x->text().toStdString();
         int new_y = (ui_->ship_input_y->text().toInt())*29;
-        int new_x_int = 1;
-        if(new_x == "A")
-            new_x_int = 1;
-        else if(new_x == "B")
-            new_x_int = 2;
-        else if(new_x == "C")
-            new_x_int = 3;
-        else if(new_x == "D")
-            new_x_int = 4;
-        else if(new_x == "E")
-            new_x_int = 5;
-        else if(new_x == "F")
-            new_x_int = 6;
-        else if(new_x == "G")
-            new_x_int = 7;
-        else if(new_x == "H")
-            new_x_int = 8;
-        else if(new_x == "I")
-            new_x_int = 9;
-        else if(new_x == "J")
-            new_x_int = 10;
-        else
-            new_x_int = 1;
+
+        int new_x_int = letterToNumber(new_x);
+
         new_x_int = new_x_int*29;
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);

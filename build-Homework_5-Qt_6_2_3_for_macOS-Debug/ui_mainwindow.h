@@ -34,7 +34,7 @@ public:
     QLabel *player2;
     QLabel *curr_player;
     QLabel *coordinates_label;
-    QLineEdit *coordinates_entered;
+    QLineEdit *attack_input_x;
     QLabel *to_shoot;
     QPushButton *enter_button;
     QGraphicsView *ships_view;
@@ -42,7 +42,7 @@ public:
     QLabel *label;
     QPushButton *place_ship_1;
     QLineEdit *ship_input_x;
-    QPushButton *Start_Game;
+    QPushButton *start_game;
     QPushButton *Quit_Game;
     QLineEdit *ship_input_y;
     QPushButton *hide_board_1;
@@ -52,6 +52,8 @@ public:
     QPushButton *place_ship_2;
     QLabel *label_2;
     QLabel *label_3;
+    QLabel *current_player_num;
+    QLineEdit *attack_input_y;
     QMenuBar *menubar;
     QMenu *menuBattleship;
     QStatusBar *statusbar;
@@ -81,15 +83,15 @@ public:
         coordinates_label = new QLabel(centralwidget);
         coordinates_label->setObjectName(QString::fromUtf8("coordinates_label"));
         coordinates_label->setGeometry(QRect(350, 180, 161, 20));
-        coordinates_entered = new QLineEdit(centralwidget);
-        coordinates_entered->setObjectName(QString::fromUtf8("coordinates_entered"));
-        coordinates_entered->setGeometry(QRect(350, 220, 113, 20));
+        attack_input_x = new QLineEdit(centralwidget);
+        attack_input_x->setObjectName(QString::fromUtf8("attack_input_x"));
+        attack_input_x->setGeometry(QRect(350, 220, 41, 20));
         to_shoot = new QLabel(centralwidget);
         to_shoot->setObjectName(QString::fromUtf8("to_shoot"));
         to_shoot->setGeometry(QRect(370, 200, 61, 16));
         enter_button = new QPushButton(centralwidget);
         enter_button->setObjectName(QString::fromUtf8("enter_button"));
-        enter_button->setGeometry(QRect(360, 250, 80, 31));
+        enter_button->setGeometry(QRect(360, 250, 80, 18));
         ships_view = new QGraphicsView(centralwidget);
         ships_view->setObjectName(QString::fromUtf8("ships_view"));
         ships_view->setGeometry(QRect(0, 460, 301, 101));
@@ -101,13 +103,13 @@ public:
         label->setGeometry(QRect(320, 440, 161, 20));
         place_ship_1 = new QPushButton(centralwidget);
         place_ship_1->setObjectName(QString::fromUtf8("place_ship_1"));
-        place_ship_1->setGeometry(QRect(310, 520, 80, 31));
+        place_ship_1->setGeometry(QRect(310, 520, 80, 18));
         ship_input_x = new QLineEdit(centralwidget);
         ship_input_x->setObjectName(QString::fromUtf8("ship_input_x"));
         ship_input_x->setGeometry(QRect(360, 490, 31, 20));
-        Start_Game = new QPushButton(centralwidget);
-        Start_Game->setObjectName(QString::fromUtf8("Start_Game"));
-        Start_Game->setGeometry(QRect(360, 397, 91, 31));
+        start_game = new QPushButton(centralwidget);
+        start_game->setObjectName(QString::fromUtf8("start_game"));
+        start_game->setGeometry(QRect(360, 397, 91, 31));
         Quit_Game = new QPushButton(centralwidget);
         Quit_Game->setObjectName(QString::fromUtf8("Quit_Game"));
         Quit_Game->setGeometry(QRect(710, 10, 80, 18));
@@ -135,10 +137,16 @@ public:
         label_3 = new QLabel(centralwidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setGeometry(QRect(410, 470, 51, 16));
+        current_player_num = new QLabel(centralwidget);
+        current_player_num->setObjectName(QString::fromUtf8("current_player_num"));
+        current_player_num->setGeometry(QRect(430, 150, 37, 12));
+        attack_input_y = new QLineEdit(centralwidget);
+        attack_input_y->setObjectName(QString::fromUtf8("attack_input_y"));
+        attack_input_y->setGeometry(QRect(410, 220, 41, 20));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 800, 17));
         menuBattleship = new QMenu(menubar);
         menuBattleship->setObjectName(QString::fromUtf8("menuBattleship"));
         MainWindow->setMenuBar(menubar);
@@ -158,13 +166,13 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         player1->setText(QCoreApplication::translate("MainWindow", "Player 1", nullptr));
         player2->setText(QCoreApplication::translate("MainWindow", "Player 2", nullptr));
-        curr_player->setText(QCoreApplication::translate("MainWindow", "Current Player", nullptr));
+        curr_player->setText(QCoreApplication::translate("MainWindow", "Current Player:", nullptr));
         coordinates_label->setText(QCoreApplication::translate("MainWindow", "Enter coordinates", nullptr));
         to_shoot->setText(QCoreApplication::translate("MainWindow", "to shoot:", nullptr));
         enter_button->setText(QCoreApplication::translate("MainWindow", "Enter", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Place selected ship starting at:", nullptr));
         place_ship_1->setText(QCoreApplication::translate("MainWindow", "Place", nullptr));
-        Start_Game->setText(QCoreApplication::translate("MainWindow", "Start Game", nullptr));
+        start_game->setText(QCoreApplication::translate("MainWindow", "Start Game", nullptr));
         Quit_Game->setText(QCoreApplication::translate("MainWindow", "Quit Game", nullptr));
         hide_board_1->setText(QCoreApplication::translate("MainWindow", "Hide Board", nullptr));
         show_board_1->setText(QCoreApplication::translate("MainWindow", "Show Board", nullptr));
@@ -173,6 +181,7 @@ public:
         place_ship_2->setText(QCoreApplication::translate("MainWindow", "Place", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Column", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Row", nullptr));
+        current_player_num->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         menuBattleship->setTitle(QCoreApplication::translate("MainWindow", "Battleship", nullptr));
     } // retranslateUi
 
