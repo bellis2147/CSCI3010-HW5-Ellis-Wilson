@@ -19,7 +19,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     void Game_Loop();
-     virtual void paintEvent(QPaintEvent *event);
     ~MainWindow();
 
 private slots:

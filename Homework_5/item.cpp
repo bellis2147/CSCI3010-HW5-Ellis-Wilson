@@ -11,29 +11,22 @@
   @param x int x coordinate
   @param y int y coordinate
 */
-Item::Item(Tiletype tile, QColor color, const int x, const int y, int width, int height) {
-  this->color_ = color;
-   tile_ = tile;
+Item::Item(Tiletype tile, const int x, const int y, int width, int height) {
+  tile_ = tile;
+  prev_tile_ = tile;
   x_ = x;
   y_ = y;
   height_ = height;
   width_ = width;
 }
-Item::Item(QColor color, const int x, const int y, int width, int height) {
-  this->color_ = color;
-  x_ = x;
-  y_ = y;
-  height_ = height;
-  width_ = width;
-}
-void Item::set_x(int x){
+void Item::set_x(const int x){
     x_ = x;
 }
-void Item::set_y(int y){
+void Item::set_y(const int y){
     y_ = y;
 }
-void Item::set_color(QColor color){
-    color_ = color;
+void Item::set_tiletype(const Tiletype new_tile){
+    tile_ = new_tile;
 }
 
 
@@ -51,17 +44,14 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
     // Day 3, Task 1
     // Change the color of the point when the user clicks on it
 
+     prev_tile_ = tile_;
     // change to a new color
-    QColor c(0, 191, 255);
-    color_ = c;
+    tile_ = selected;
 
     // need to make the point actually re-paint itself
     update();
-}
 
-// where is this object located
-// always a rectangle, Qt uses this to know "where" the user
-// would be interacting with this object
+}
 QRectF Item::boundingRect() const
 {
     return QRectF(x_, y_, width_, height_);
@@ -83,7 +73,37 @@ void Item::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QBrush b = painter->brush();
     // update the line for setBrush to be this
-    painter->setBrush(QBrush(color_));
+    //set Brush based on tiletype
+    switch (tile_)
+    {
+        case empty:
+            painter->setBrush(QBrush(QColor(200,200,200)));
+            break;
+        case ship:
+            painter->setBrush(QBrush(QColor(150,75,0)));
+            break;
+        case chest:
+            painter->setBrush(QBrush(QColor(255,215,0)));
+            break;
+        case mine:
+            painter->setBrush(QBrush(QColor(0,0,0)));
+            break;
+        case miss:
+            painter->setBrush(QBrush(QColor(60,75,200)));
+            break;
+        case hit_ship:
+            painter->setBrush(QBrush(QColor(175,55,55)));
+            break;
+        case hit_chest:
+            painter->setBrush(QBrush(QColor(255,255,0)));
+            break;
+        case hit_mine:
+            painter->setBrush(QBrush(QColor(250,250,250)));
+            break;
+        case selected:
+            painter->setBrush(QBrush(QColor(0,191,255)));
+            break;
+    }
     painter->drawRect(QRect(this->x_, this->y_, this->width_, this->height_));
     painter->setBrush(b);
 }

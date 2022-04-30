@@ -72,20 +72,20 @@ MainWindow::MainWindow(QWidget *parent)
         //board[i*10+j]->set_y(view->frameSize().height()/10*(9-i));
 
     }
-    QColor color(150,75,0);
-    Item * ship_1 = new Item(color, 1, 1, 29, 87);
-    Item * ship_2 = new Item(color, 39, 1, 87, 29);
-    Item * ship_3 = new Item(color, 39, 39, 58, 29);
-    Item * ship_4 = new Item(color, 136, 1, 29, 58);
-    Item * ship_5 = new Item(color, 102, 39, 29, 29);
+    //Intialize player 1 ships
+    Item * ship_1 = new Item(ship, 1, 1, 29, 87);
+    Item * ship_2 = new Item(ship, 39, 1, 87, 29);
+    Item * ship_3 = new Item(ship, 39, 39, 58, 29);
+    Item * ship_4 = new Item(ship, 136, 1, 29, 58);
+    Item * ship_5 = new Item(ship, 102, 39, 29, 29);
 
-    QColor color_chest(255,215,0);
-    Item * chest_1 = new Item(color_chest, 184, 1, 29, 29);
-    Item * chest_2 = new Item(color_chest, 184, 39, 29, 29);
+    //Initialize player 1 chests
+    Item * chest_1 = new Item(chest, 184, 1, 29, 29);
+    Item * chest_2 = new Item(chest, 184, 39, 29, 29);
 
-    QColor color_mine(0,0,0);
-    Item * mine_1 = new Item(color_mine, 223, 1, 29, 29);
-    Item * mine_2 = new Item(color_mine, 223, 39, 29, 29);
+    //intialize player 2 ships
+    Item * mine_1 = new Item(mine, 223, 1, 29, 29);
+    Item * mine_2 = new Item(mine, 223, 39, 29, 29);
 /*
     Item * ship_1 = new Item(ship,color, 0, 0, 29, 87);
     Item * ship_2 = new Item(ship,color, 39, 0, 87, 29);
@@ -113,17 +113,18 @@ MainWindow::MainWindow(QWidget *parent)
     scene_3_->addItem(mine_2);
 
 
-    Item * ship_6 = new Item(color, 1, 1, 29, 87);
-    Item * ship_7 = new Item(color, 39, 1, 87, 29);
-    Item * ship_8 = new Item(color, 39, 39, 58, 29);
-    Item * ship_9 = new Item(color, 136, 1, 29, 58);
-    Item * ship_10 = new Item(color, 102, 39, 29, 29);
+    //initialize player 2 items
+    Item * ship_6 = new Item(ship, 1, 1, 29, 87);
+    Item * ship_7 = new Item(ship, 39, 1, 87, 29);
+    Item * ship_8 = new Item(ship, 39, 39, 58, 29);
+    Item * ship_9 = new Item(ship, 136, 1, 29, 58);
+    Item * ship_10 = new Item(ship, 102, 39, 29, 29);
 
-    Item * chest_3 = new Item(color_chest, 184, 1, 29, 29);
-    Item * chest_4 = new Item(color_chest, 184, 39, 29, 29);
+    Item * chest_3 = new Item(chest, 184, 1, 29, 29);
+    Item * chest_4 = new Item(chest, 184, 39, 29, 29);
 
-    Item * mine_3 = new Item(color_mine, 223, 1, 29, 29);
-    Item * mine_4 = new Item(color_mine, 223, 39, 29, 29);
+    Item * mine_3 = new Item(mine, 223, 1, 29, 29);
+    Item * mine_4 = new Item(mine, 223, 39, 29, 29);
     /*
     Item * ship_6 = new Item(ship,color, 0, 0, 29, 87);
     Item * ship_7 = new Item(ship,color, 39, 0, 87, 29);
@@ -262,8 +263,7 @@ void MainWindow::PlaceItemSlot1() {
         new_x_int = new_x_int*29;
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);
-        QColor color(150,75,0);
-        curr_item_->set_color(color);
+        curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
         scene_3_->removeItem(curr_item_);
         scene_->addItem(curr_item_);
     }
@@ -300,8 +300,7 @@ void MainWindow::PlaceItemSlot2() {
         new_x_int = new_x_int*29;
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);
-        QColor color(150,75,0);
-        curr_item_->set_color(color);
+        curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
         scene_4_->removeItem(curr_item_);
         scene_2_->addItem(curr_item_);
     }
@@ -312,28 +311,7 @@ void MainWindow::start_game()
     game_ = new Game();
 
 }
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    int size = 50;
-//    Tile curr_tile;
 
-    QPainter painter(this);
-    //painter.setBrush(Qt::DiagCrossPattern);
-
-
-    QPen pen;
-
-    //curr_tile = game_->get_tile(1, 10, 10);
-    //if(curr_tile.type == ship)
-    //{
-         // pen.setColor(Qt::green);
-    //}
-    pen.setWidth(5);
-
-    painter.setPen(pen);
-    pen.setColor(Qt::green);
-    painter.drawRect(QRect(10,10, size, size));
-}
 void MainWindow::QuitSlot() {
     quit_ = true;
 }
