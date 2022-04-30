@@ -30,6 +30,8 @@ private slots:
     void HideBoard2Slot();
     void ShowBoard1Slot();
     void ShowBoard2Slot();
+    void StartGameSlot();
+    void AttackSlot();
     void start_game();
 private:
     Ui::MainWindow *ui_;
