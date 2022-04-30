@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include "game.h"
 #include "item.h"
+#include "player.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,13 +17,17 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    void Game_Loop();
     ~MainWindow();
 
 private slots:
     void ItemSelectedSlot(Item *p);
-    void PlaceItemSlot();
+    void PlaceItemSlot1();
+    void PlaceItemSlot2();
     void QuitSlot();
+    void HideBoard1Slot();
+    void HideBoard2Slot();
+    void ShowBoard1Slot();
+    void ShowBoard2Slot();
 private:
     Ui::MainWindow *ui_;
     QGraphicsView *view_;
@@ -35,6 +40,8 @@ private:
     QGraphicsScene *scene_4_;
     Item * curr_item_;
     bool quit_;
+    Player* player_1_;
+    Player* player_2_;
 
     Game *game_;
 };

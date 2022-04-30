@@ -146,7 +146,7 @@
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>460</y>
+      <y>440</y>
       <width>161</width>
       <height>20</height>
      </rect>
@@ -155,10 +155,10 @@
      <string>Place selected ship starting at:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="place_ship_buttton">
+   <widget class="QPushButton" name="place_ship_1">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>310</x>
       <y>520</y>
       <width>80</width>
       <height>18</height>
@@ -212,6 +212,97 @@
       <width>31</width>
       <height>20</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="hide_board_1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hide Board</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="show_board_1">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>90</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Show Board</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="show_board_2">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>90</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Show Board</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="hide_board_2">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>90</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hide Board</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="place_ship_2">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>520</y>
+      <width>80</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Place</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>470</y>
+      <width>61</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Column</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>470</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Row</string>
     </property>
    </widget>
   </widget>

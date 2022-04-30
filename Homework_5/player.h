@@ -1,11 +1,18 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+#include "item.h"
+#include <vector>
 
 
 class Player
 {
 public:
-    Player();
+    Player(std::vector<Item*> items);
+    void add_item(Item* item);
+    std::vector<Item*> get_items(){return items_;}
+
+private:
+    std::vector<Item*> items_;
 };
 
 #endif // PLAYER_H
