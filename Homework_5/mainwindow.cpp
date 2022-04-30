@@ -3,6 +3,7 @@
 #include "item.h"
 #include "player.h"
 
+#include "game.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
@@ -85,7 +86,21 @@ MainWindow::MainWindow(QWidget *parent)
     QColor color_mine(0,0,0);
     Item * mine_1 = new Item(color_mine, 223, 1, 29, 29);
     Item * mine_2 = new Item(color_mine, 223, 39, 29, 29);
+/*
+    Item * ship_1 = new Item(ship,color, 0, 0, 29, 87);
+    Item * ship_2 = new Item(ship,color, 39, 0, 87, 29);
+    Item * ship_3 = new Item(ship,color, 39, 39, 58, 29);
+    Item * ship_4 = new Item(ship,color, 136, 0, 29, 58);
+    Item * ship_5 = new Item(ship,color, 102, 39, 29, 29);
 
+    QColor color_chest(255,215,0);
+    Item * chest_1 = new Item(chest,color_chest, 184, 0, 29, 29);
+    Item * chest_2 = new Item(chest,color_chest, 184, 39, 29, 29);
+
+    QColor color_mine(0,0,0);
+    Item * mine_1 = new Item(mine,color_mine, 223, 0, 29, 29);
+    Item * mine_2 = new Item(mine,color_mine, 223, 39, 29, 29);
+   */
     // add these to the scene for player 1
     scene_3_->addItem(ship_1);
     scene_3_->addItem(ship_2);
@@ -96,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene_3_->addItem(chest_2);
     scene_3_->addItem(mine_1);
     scene_3_->addItem(mine_2);
+
 
     Item * ship_6 = new Item(color, 1, 1, 29, 87);
     Item * ship_7 = new Item(color, 39, 1, 87, 29);
@@ -108,6 +124,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     Item * mine_3 = new Item(color_mine, 223, 1, 29, 29);
     Item * mine_4 = new Item(color_mine, 223, 39, 29, 29);
+    /*
+    Item * ship_6 = new Item(ship,color, 0, 0, 29, 87);
+    Item * ship_7 = new Item(ship,color, 39, 0, 87, 29);
+    Item * ship_8 = new Item(ship,color, 39, 39, 58, 29);
+    Item * ship_9 = new Item(ship,color, 136, 0, 29, 58);
+    Item * ship_10 = new Item(ship,color, 102, 39, 29, 29);
+
+    Item * chest_3 = new Item(chest,color_chest, 184, 0, 29, 29);
+    Item * chest_4 = new Item(chest,color_chest, 184, 39, 29, 29);
+
+    Item * mine_3 = new Item(mine,color_mine, 223, 0, 29, 29);
+    Item * mine_4 = new Item(mine, color_mine, 223, 39, 29, 29);
+    */
     // add these to the scene for player 2
     scene_4_->addItem(ship_6);
     scene_4_->addItem(ship_7);
@@ -144,6 +173,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_->place_ship_1, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot1);
     connect(ui_->place_ship_2, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot2);
     connect(ui_->Quit_Game, &QAbstractButton::pressed, this, &MainWindow::QuitSlot);
+    //connect(ui_->Start_Game, &QAbstractButton::pressed, this, &MainWindow::start_game);
     //game_ = new Game(view_,scene_,view_2_,scene_2_);
 
     connect(ui_->hide_board_1, &QAbstractButton::pressed, this, &MainWindow::HideBoard1Slot);
@@ -151,10 +181,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_->show_board_1, &QAbstractButton::pressed, this, &MainWindow::ShowBoard1Slot);
     connect(ui_->show_board_2, &QAbstractButton::pressed, this, &MainWindow::ShowBoard2Slot);
 }
+/*
+void MainWindow::Game_Loop(){
+    Tile curr_tile;
+    while(!quit_)
+    {
+        connect(ui_->place_ship_buttton, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot);
+        connect(ui_->Quit_Game, &QAbstractButton::pressed, this, &MainWindow::QuitSlot);
+
+        curr_tile = game_->get_tile(1, 10, 10);
+        if(curr_tile.type == ship)
+        {
+
+        }
+    }
+}
+*/
 
 void MainWindow::ItemSelectedSlot(Item *p) {
     curr_item_ = p;
-
 }
 void MainWindow::HideBoard1Slot(){
     for (int i = 0; i < 9; i++)
@@ -192,25 +237,25 @@ void MainWindow::PlaceItemSlot1() {
         std::string new_x = ui_->ship_input_x->text().toStdString();
         int new_y = (ui_->ship_input_y->text().toInt())*29;
         int new_x_int = 1;
-        if(new_x == "A")
+        if(new_x == "A" || new_x == "a")
             new_x_int = 1;
-        else if(new_x == "B")
+        else if(new_x == "B"|| new_x == "b")
             new_x_int = 2;
-        else if(new_x == "C")
+        else if(new_x == "C" || new_x == "c")
             new_x_int = 3;
-        else if(new_x == "D")
+        else if(new_x == "D" || new_x == "d")
             new_x_int = 4;
-        else if(new_x == "E")
+        else if(new_x == "E" || new_x == "e")
             new_x_int = 5;
-        else if(new_x == "F")
+        else if(new_x == "F" || new_x == "f")
             new_x_int = 6;
-        else if(new_x == "G")
+        else if(new_x == "G" || new_x == "g")
             new_x_int = 7;
-        else if(new_x == "H")
+        else if(new_x == "H" || new_x == "h")
             new_x_int = 8;
-        else if(new_x == "I")
+        else if(new_x == "I" || new_x == "i")
             new_x_int = 9;
-        else if(new_x == "J")
+        else if(new_x == "J" || new_x == "j")
             new_x_int = 10;
         else
             new_x_int = 1;
@@ -262,9 +307,35 @@ void MainWindow::PlaceItemSlot2() {
     }
 
 }
+void MainWindow::start_game()
+{
+    game_ = new Game();
+
+}
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    int size = 50;
+//    Tile curr_tile;
+
+    QPainter painter(this);
+    //painter.setBrush(Qt::DiagCrossPattern);
+
+
+    QPen pen;
+
+    //curr_tile = game_->get_tile(1, 10, 10);
+    //if(curr_tile.type == ship)
+    //{
+         // pen.setColor(Qt::green);
+    //}
+    pen.setWidth(5);
+
+    painter.setPen(pen);
+    pen.setColor(Qt::green);
+    painter.drawRect(QRect(10,10, size, size));
+}
 void MainWindow::QuitSlot() {
     quit_ = true;
-
 }
 
 MainWindow::~MainWindow()

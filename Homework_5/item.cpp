@@ -11,6 +11,14 @@
   @param x int x coordinate
   @param y int y coordinate
 */
+Item::Item(Tiletype tile, QColor color, const int x, const int y, int width, int height) {
+  this->color_ = color;
+   tile_ = tile;
+  x_ = x;
+  y_ = y;
+  height_ = height;
+  width_ = width;
+}
 Item::Item(QColor color, const int x, const int y, int width, int height) {
   this->color_ = color;
   x_ = x;
@@ -36,13 +44,6 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     qDebug() << "item selected!";
     emit ItemSelected(this);
-
-    // Day 3, Task 2, Step 1
-    // emit this signal when the user right-clicks on the point
-    // you can compare the event()->button value to Qt::ModifierYouAreLookingFor
-    //if(event->button() == Qt::RightButton){
-    //    emit ItemSelected(this);
-    //}
 
     emit DeleteItem(this);
 
