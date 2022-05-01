@@ -17,11 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     view_2_ = ui_ ->plotGraphicsView_2;
     view_3_ = ui_ ->ships_view;
     view_4_ = ui_ ->ships_view_2;
-
+    board_1_hit_items = 0;
+    board_2_hit_items = 0;
     scene_ = new QGraphicsScene;
     scene_2_ = new QGraphicsScene;
     scene_3_ = new QGraphicsScene;
     scene_4_ = new QGraphicsScene;
+    ui_->status_label->setText("Player 1 turn to place tiles");
+    ui_->place_ship_2->hide();
+    ui_->enter_button->hide();
     view_->setScene(scene_);
     // make the scene the same size as the view containing it
     view_->setSceneRect(0,0,view_->frameSize().width(),view_->frameSize().height());
@@ -226,22 +230,26 @@ void MainWindow::ItemSelectedSlot(Item *p) {
     curr_item_ = p;
 }
 void MainWindow::HideBoard1Slot(){
-    for (int i = 0; i < player_1_->get_items().size(); i++)
+    int get_items_size =  player_1_->get_items().size();
+    for (int i = 0; i < get_items_size; i++)
     {
             scene_->removeItem(player_1_->get_items()[i]);
     }
 }
 void MainWindow::HideBoard2Slot(){
-    for (int i = 0; i < player_2_->get_items().size(); i++)
+    int get_items_size = player_2_->get_items().size();
+    for (int i = 0; i < get_items_size; i++)
     {
             scene_2_->removeItem(player_2_->get_items()[i]);
     }
 }
 void MainWindow::StartGameSlot(){
-    /*if(items_placed >= 18)
+    if(items_placed >= 18)
     {
         ui_->status_label->setText("Game started");
         ui_->current_player_num->setText("1");
+        ui_->enter_button->show();
+        ui_->show_board_1->show();
         game_started = true;
 
         delete scene_3_;
@@ -250,10 +258,8 @@ void MainWindow::StartGameSlot(){
     else
     {
         ui_->status_label->setText("place all items first");
-    }*/
-    ui_->status_label->setText("Game started");
-    ui_->current_player_num->setText("1");
-    game_started = true;
+    }
+
 
 }
 void MainWindow::AttackSlot(){
@@ -264,6 +270,9 @@ void MainWindow::AttackSlot(){
     }
     if(ui_->current_player_num->text() == "1"){
         std::string new_x = ui_->attack_input_x->text().toStdString();
+        ui_->show_board_2->show();
+        ui_->show_board_1->hide();
+        HideBoard1Slot();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
 
         int new_x_int = letterToNumber(new_x);
@@ -273,7 +282,8 @@ void MainWindow::AttackSlot(){
         //variables to make the loops function properly
         int repeat = 0;
         int check_hit = 0;
-        for(int j = 0; j < shot_two_.size(); j++)
+        int shot_two_size = shot_two_.size();
+        for(int j = 0; j < shot_two_size; j++)
         {
             if(new_y == shot_two_[j]->get_y() && new_x_int == shot_two_[j]->get_x())
             {
@@ -284,43 +294,147 @@ void MainWindow::AttackSlot(){
         }
         if(repeat == 0)
         {
-            for(int i = 0; i < player_2_->get_items().size(); i++){
-                if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
-                    if(player_2_->get_items()[i]->get_tiletype() == ship)
-                    {
+            int get_items_size = player_2_->get_items().size();
+            for(int i = 0; i < get_items_size; i++){
+                if(player_2_->get_items()[i]->get_height() == 29 && player_2_->get_items()[i]->get_width() == 29){
+                    if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        if(player_2_->get_items()[i]->get_tiletype() == ship)
+                        {
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            player_2_->remove_item(i);
+                            shot_two_.push_back(hit_item);
+                            scene_2_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            board_2_hit_items++;
+                        }
+                        else if(player_2_->get_items()[i]->get_tiletype() == chest)
+                        {
+                            //delete item within player class
+                            delete player_2_->get_items()[i];
+                            player_2_->remove_item(i);
+                            //add new item within window
+                            Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
+                            shot_two_.push_back(hit_item);
+                            scene_2_->addItem(hit_item);
+                            ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
+                            player_1_->set_powerUp(true);
+                            board_2_hit_items++;
+                        }
+                        else if(player_2_->get_items()[i]->get_tiletype() == mine)
+                        {
+                            delete player_2_->get_items()[i];
+                            player_2_->remove_item(i);
+                            Item* hit_item = new Item(hit_mine, new_x_int, new_y, 29, 29);
+                            shot_two_.push_back(hit_item);
+                            scene_2_->addItem(hit_item);
+                             ui_->status_label->setText("Hit a Mine!");
+                             //hit the other players tile on that side
+                             ui_->current_player_num->setText("2");
+                             AttackSlot();
+                             board_2_hit_items++;
+                        }
+
+                        check_hit++;
+                        break;
+                    }
+                }
+                else if (player_2_->get_items()[i]->get_height() == 58 && player_2_->get_items()[i]->get_width() == 29){
+                    if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
                         Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
                     }
-                    else if(player_2_->get_items()[i]->get_tiletype() == chest)
-                    {
-                        //delete item within player class
-                        delete player_2_->get_items()[i];
-                        player_2_->remove_item(i);
-                        //add new item within window
-                        Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
+                    else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
-                        ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
-
-                        player_1_->set_powerUp(true);;
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
                     }
-                    else if(player_2_->get_items()[i]->get_tiletype() == mine)
-                    {
-                        delete player_2_->get_items()[i];
-                        player_2_->remove_item(i);
-                        Item* hit_item = new Item(hit_mine, new_x_int, new_y, 29, 29);
+                }
+                else if (player_2_->get_items()[i]->get_height() == 87 && player_2_->get_items()[i]->get_width() == 29){
+                    if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
-                         ui_->status_label->setText("Hit a Mine!");
-
-                         //hit the other players tile on that side
-                         ui_->current_player_num->setText("2");
-                         AttackSlot();
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
                     }
-                    check_hit++;
-                    break;
+                    else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
+                        check_hit++;
+                        break;
+                    }
+                    else if (new_y == player_2_->get_items()[i]->get_y()+58 && new_x_int == player_2_->get_items()[i]->get_x()){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
+                        check_hit++;
+                        break;
+                    }
+                }
+                else if (player_2_->get_items()[i]->get_height() == 29 && player_2_->get_items()[i]->get_width() == 58){
+                    if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
+                    }
+                    else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
+                        check_hit++;
+                        break;
+                    }
+                }
+                else {
+                    if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
+                    }
+                    else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
+                    }
+                    else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+58){
+                        Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                        shot_two_.push_back(hit_item);
+                        scene_2_->addItem(hit_item);
+                        ui_->status_label->setText("Hit a Ship!");
+                        check_hit++;
+                        board_2_hit_items++;
+                        break;
+                    }
                 }
             }
             if (check_hit == 0){
@@ -329,6 +443,12 @@ void MainWindow::AttackSlot(){
                 shot_two_.push_back(missed_item);
                 ui_->status_label->setText("Miss!");
             }
+            if(board_2_hit_items == 15){
+                ui_->status_label->setText("Game won by Player 1!");
+                ui_->enter_button->hide();
+                ShowBoard1Slot();
+                ShowBoard2Slot();
+            }
 
             ui_->current_player_num->setText("2");
         }
@@ -336,6 +456,9 @@ void MainWindow::AttackSlot(){
     }
     else{
         std::string new_x = ui_->attack_input_x->text().toStdString();
+        ui_->show_board_1->show();
+        ui_->show_board_2->hide();
+        HideBoard2Slot();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
 
         int new_x_int = letterToNumber(new_x);
@@ -346,7 +469,8 @@ void MainWindow::AttackSlot(){
         int check_hit = 0;
 
         //first check if they have already shot there
-            for(int j = 0; j < shot_one_.size(); j++)
+        int shot_1_size = shot_one_.size();
+            for(int j = 0; j < shot_1_size; j++)
             {
                 if(new_y == shot_one_[j]->get_y() && new_x_int == shot_one_[j]->get_x())
                 {
@@ -357,44 +481,147 @@ void MainWindow::AttackSlot(){
             }
             if(repeat == 0)
             {
-                for(int i = 0; i < player_1_->get_items().size(); i++){
-                    if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
+                int get_items_size = player_1_->get_items().size();
+                for(int i = 0; i < get_items_size; i++){
+                    if(player_1_->get_items()[i]->get_height() == 29 && player_1_->get_items()[i]->get_width() == 29){
+                        if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
+                            if(player_1_->get_items()[i]->get_tiletype() == ship)
+                            {
+                                Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                                shot_one_.push_back(hit_item);
+                                scene_->addItem(hit_item);
+                                ui_->status_label->setText("Hit a Ship!");
+                                board_1_hit_items++;
+                            }
+                            else if(player_1_->get_items()[i]->get_tiletype() == chest)
+                            {
+                                //delete item within player class
+                                delete player_1_->get_items()[i];
+                                player_1_->remove_item(i);
+                                //add new item within window
+                                Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
+                                shot_one_.push_back(hit_item);
+                                scene_->addItem(hit_item);
+                                ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
+                                player_2_->set_powerUp(true);;
+                                board_1_hit_items++;
+                            }
+                            else if(player_1_->get_items()[i]->get_tiletype() == mine)
+                            {
+                                delete player_1_->get_items()[i];
+                                player_1_->remove_item(i);
+                                Item* hit_item = new Item(hit_mine, new_x_int, new_y, 29, 29);
+                                shot_one_.push_back(hit_item);
+                                scene_->addItem(hit_item);
+                                ui_->status_label->setText("Hit a Mine!");
 
-                        if(player_1_->get_items()[i]->get_tiletype() == ship)
-                        {
-                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
-                            scene_->addItem(hit_item);
-                            shot_one_.push_back(hit_item);
-                            ui_->status_label->setText("Hit a Ship!");
+                                //hit the other players tile on that side
+                                ui_->current_player_num->setText("1");
+                                AttackSlot();
+                                board_1_hit_items++;
+                            }
+
+                            check_hit++;
+                            break;
                         }
-                        else if(player_1_->get_items()[i]->get_tiletype() == chest)
-                        {
-                            delete player_1_->get_items()[i];
-                            player_1_->remove_item(i);
-                            Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
-                            scene_->addItem(hit_item);
-                            shot_one_.push_back(hit_item);
-                             ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
-
-                             player_2_->set_powerUp(true);;
-                        }
-                        else if(player_1_->get_items()[i]->get_tiletype() == mine)
-                        {
-                            delete player_1_->get_items()[i];
-                            player_1_->remove_item(i);
-                            Item* hit_item = new Item(hit_mine, new_x_int, new_y, 29, 29);
-                            scene_->addItem(hit_item);
-                            shot_one_.push_back(hit_item);
-                             ui_->status_label->setText("Hit a Mine!");
-
-                             //hit the other players tile on that side
-                             ui_->current_player_num->setText("1");
-                             AttackSlot();
-                        }
-                        check_hit++;
-                        break;
-
                     }
+                    else if (player_1_->get_items()[i]->get_height() == 58 && player_1_->get_items()[i]->get_width() == 29){
+                        if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_1_->get_items()[i]->get_y()+29 && new_x_int == player_1_->get_items()[i]->get_x()){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                    }
+                    else if (player_1_->get_items()[i]->get_height() == 87 && player_1_->get_items()[i]->get_width() == 29){
+                        if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_1_->get_items()[i]->get_y()+29 && new_x_int == player_1_->get_items()[i]->get_x()){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_1_->get_items()[i]->get_y()+58 && new_x_int == player_1_->get_items()[i]->get_x()){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                    }
+                    else if (player_1_->get_items()[i]->get_height() == 29 && player_1_->get_items()[i]->get_width() == 58){
+                        if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x()+29){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                    }
+                    else {
+                        if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x()+29){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_two_.push_back(hit_item);
+                            scene_2_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
+                        else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+58){
+                            Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
+                            ui_->status_label->setText("Hit a Ship!");
+                            check_hit++;
+                            board_1_hit_items++;
+                            break;
+                        }
                 }
                 if (check_hit == 0){
                     Item* missed_item = new Item(miss, new_x_int, new_y, 29, 29);
@@ -403,8 +630,17 @@ void MainWindow::AttackSlot(){
                      ui_->status_label->setText("Miss!");
                 }
                 ui_->current_player_num->setText("1");
+                if (board_1_hit_items == 15){
+                    ui_->status_label->setText("Game won by player 2!");
+                    ui_->enter_button->hide();
+                    ShowBoard1Slot();
+                    ShowBoard2Slot();
+                }
+
             }
+          ui_->attack_input_y->text() = '1';
         }
+    }
 
     if(ui_->current_player_num->text() == "1" && player_1_->get_powerUp() == true)
     {
@@ -477,17 +713,18 @@ void MainWindow::MultiShotSlot()
         }
 
     }
-    ui_->attack_input_y->text() = '1';
 }
 
 void MainWindow::ShowBoard1Slot(){
     //first delete items from scene in window class
     //so they can show on top of items in player class
-    for(int i = 0; i < shot_one_.size(); i++)
+    int shot_one_size = shot_one_.size();
+    for(int i = 0; i < shot_one_size; i++)
     {
         scene_->removeItem(shot_one_[i]);
     }
-    for (int i = 0; i < player_1_->get_items().size(); i++)
+    int get_items_size = player_1_->get_items().size();
+    for (int i = 0; i < get_items_size; i++)
     {
         if (player_1_->get_items()[i]->get_x()%29 == 0)
             scene_->addItem(player_1_->get_items()[i]);
@@ -495,19 +732,21 @@ void MainWindow::ShowBoard1Slot(){
             scene_3_->addItem(player_1_->get_items()[i]);
     }
     //add items back after adding items from player
-    for(int i = 0; i < shot_one_.size(); i++)
+    for(int i = 0; i < shot_one_size; i++)
     {
         scene_->addItem(shot_one_[i]);
     }
 }
 void MainWindow::ShowBoard2Slot(){
     //remove
-    for(int i = 0; i < shot_two_.size(); i++)
+    int shot_two_size = shot_two_.size();
+    for(int i = 0; i < shot_two_size; i++)
     {
         scene_2_->removeItem(shot_two_[i]);
     }
     //add player items
-    for (int i = 0; i < player_2_->get_items().size(); i++)
+    int get_items_size = player_2_->get_items().size();
+    for (int i = 0; i < get_items_size; i++)
     {
         if (player_2_->get_items()[i]->get_x()%29 == 0)
             scene_2_->addItem(player_2_->get_items()[i]);
@@ -515,7 +754,7 @@ void MainWindow::ShowBoard2Slot(){
             scene_4_->addItem(player_2_->get_items()[i]);
     }
     //add shot items back
-    for(int i = 0; i < shot_two_.size(); i++)
+    for(int i = 0; i < shot_two_size; i++)
     {
         scene_2_->addItem(shot_two_[i]);
     }
@@ -536,6 +775,13 @@ void MainWindow::PlaceItemSlot1() {
         scene_->addItem(curr_item_);
 
         items_placed++;
+        if (items_placed == 9){
+            ui_->status_label->setText("Player 2 turn to place tiles");
+            ui_->place_ship_1->hide();
+            ui_->place_ship_2->show();
+            ui_->show_board_1->hide();
+            HideBoard1Slot();
+        }
     }
 
 }
@@ -555,6 +801,12 @@ void MainWindow::PlaceItemSlot2() {
         scene_2_->addItem(curr_item_);
 
         items_placed++;
+        if (items_placed == 18){
+            ui_->status_label->setText("Able to start game now");
+            ui_->place_ship_2->hide();
+            HideBoard2Slot();
+            ui_->show_board_2->hide();
+        }
     }
 
 }

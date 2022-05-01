@@ -36,7 +36,6 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
 
     qDebug() << "item selected!";
-    emit ItemSelected(this);
 
     emit DeleteItem(this);
 
@@ -46,7 +45,10 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
      prev_tile_ = tile_;
     // change to a new color
-    tile_ = selected;
+     if(x_ %29 != 0){
+        tile_ = selected;
+        emit ItemSelected(this);
+     }
 
     // need to make the point actually re-paint itself
     update();
