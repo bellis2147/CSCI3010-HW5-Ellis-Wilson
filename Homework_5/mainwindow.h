@@ -32,6 +32,7 @@ private slots:
     void ShowBoard2Slot();
     void StartGameSlot();
     void AttackSlot();
+    void MultiShotSlot();
 private:
     Ui::MainWindow *ui_;
     QGraphicsView *view_;

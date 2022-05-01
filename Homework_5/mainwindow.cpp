@@ -176,12 +176,11 @@ MainWindow::MainWindow(QWidget *parent)
     player_2_ = new Player({ship_6,ship_7,ship_8,ship_9,ship_10,mine_3,mine_4,chest_3,chest_4});
 
 
+    ui_->multi_shot->hide();
 
     connect(ui_->place_ship_1, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot1);
     connect(ui_->place_ship_2, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot2);
     connect(ui_->Quit_Game, &QAbstractButton::pressed, this, &MainWindow::QuitSlot);
-    //connect(ui_->Start_Game, &QAbstractButton::pressed, this, &MainWindow::start_game);
-    //game_ = new Game(view_,scene_,view_2_,scene_2_);
 
     connect(ui_->hide_board_1, &QAbstractButton::pressed, this, &MainWindow::HideBoard1Slot);
     connect(ui_->hide_board_2, &QAbstractButton::pressed, this, &MainWindow::HideBoard2Slot);
@@ -190,6 +189,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui_->start_game, &QAbstractButton::pressed, this, &MainWindow::StartGameSlot);
     connect(ui_->enter_button, &QAbstractButton::pressed, this, &MainWindow::AttackSlot);
+    connect(ui_->multi_shot, &QAbstractButton::pressed, this, &MainWindow::MultiShotSlot);
+
 }
 
 int letterToNumber(std::string new_x)
@@ -237,11 +238,11 @@ void MainWindow::HideBoard2Slot(){
     }
 }
 void MainWindow::StartGameSlot(){
-    if(items_placed >= 18)
+    /*if(items_placed >= 18)
     {
         ui_->status_label->setText("Game started");
         ui_->current_player_num->setText("1");
-        game_started == true;
+        game_started = true;
 
         delete scene_3_;
         delete scene_4_;
@@ -249,7 +250,10 @@ void MainWindow::StartGameSlot(){
     else
     {
         ui_->status_label->setText("place all items first");
-    }
+    }*/
+    ui_->status_label->setText("Game started");
+    ui_->current_player_num->setText("1");
+    game_started = true;
 
 }
 void MainWindow::AttackSlot(){
@@ -298,7 +302,9 @@ void MainWindow::AttackSlot(){
                         Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
-                        ui_->status_label->setText("Found a Treasure Chest!");
+                        ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
+
+                        player_1_->set_powerUp(true);;
                     }
                     else if(player_2_->get_items()[i]->get_tiletype() == mine)
                     {
@@ -308,6 +314,10 @@ void MainWindow::AttackSlot(){
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
                          ui_->status_label->setText("Hit a Mine!");
+
+                         //hit the other players tile on that side
+                         ui_->current_player_num->setText("2");
+                         AttackSlot();
                     }
                     check_hit++;
                     break;
@@ -364,7 +374,9 @@ void MainWindow::AttackSlot(){
                             Item* hit_item = new Item(hit_chest, new_x_int, new_y, 29, 29);
                             scene_->addItem(hit_item);
                             shot_one_.push_back(hit_item);
-                             ui_->status_label->setText("Found a Treasure Chest!");
+                             ui_->status_label->setText("Found a Treasure Chest! Recieved a Multi-Shot");
+
+                             player_2_->set_powerUp(true);;
                         }
                         else if(player_1_->get_items()[i]->get_tiletype() == mine)
                         {
@@ -374,6 +386,10 @@ void MainWindow::AttackSlot(){
                             scene_->addItem(hit_item);
                             shot_one_.push_back(hit_item);
                              ui_->status_label->setText("Hit a Mine!");
+
+                             //hit the other players tile on that side
+                             ui_->current_player_num->setText("1");
+                             AttackSlot();
                         }
                         check_hit++;
                         break;
@@ -389,6 +405,79 @@ void MainWindow::AttackSlot(){
                 ui_->current_player_num->setText("1");
             }
         }
+
+    if(ui_->current_player_num->text() == "1" && player_1_->get_powerUp() == true)
+    {
+        ui_->multi_shot->show();
+    }
+    else if(ui_->current_player_num->text() == "2" && player_2_->get_powerUp() == true)
+    {
+        ui_->multi_shot->show();
+    }
+    else
+    {
+        ui_->multi_shot->hide();
+    }
+}
+
+void MainWindow::MultiShotSlot()
+{
+    int plusOne;
+    int minusOne;
+    QString str_x;
+    if(ui_->attack_input_y->text().toInt() > 9 || ui_->attack_input_y->text().toInt() < 2)
+    {
+        ui_->status_label->setText("Not a valid multishot");
+    }
+    else
+    {
+        if(ui_->current_player_num->text() == "1")
+        {
+            //shoot on the tile selected
+            AttackSlot();
+            ui_->current_player_num->setText("1");
+            //shoot on the tile below
+            plusOne = ui_->attack_input_y->text().toInt() + 1;
+            str_x = QString::number(plusOne);
+            ui_->attack_input_y->setText(str_x);
+            AttackSlot();
+
+            ui_->attack_input_y->clear();
+            ui_->current_player_num->setText("1");
+            //shoot on the tile above
+            minusOne = plusOne - 2;
+            str_x = QString::number(minusOne);
+            ui_->attack_input_y->setText(str_x);
+            AttackSlot();
+
+            ui_->attack_input_y->clear();
+            player_1_->set_powerUp(false);
+        }
+        else
+        {
+            //shoot on the tile selected
+            AttackSlot();
+            ui_->current_player_num->setText("2");
+            //shoot on the tile below
+            plusOne = ui_->attack_input_y->text().toInt() + 1;
+             str_x = QString::number(plusOne);
+            ui_->attack_input_y->setText(str_x);
+            AttackSlot();
+
+            ui_->attack_input_y->clear();
+            ui_->current_player_num->setText("2");
+            //shoot on the tile above
+            minusOne = plusOne - 2;
+            str_x = QString::number(minusOne);
+            ui_->attack_input_y->setText(str_x);
+            AttackSlot();
+
+            ui_->attack_input_y->clear();
+            player_2_->set_powerUp(false);
+        }
+
+    }
+    ui_->attack_input_y->text() = '1';
 }
 
 void MainWindow::ShowBoard1Slot(){

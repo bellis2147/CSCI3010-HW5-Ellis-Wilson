@@ -55,6 +55,7 @@ public:
     QLabel *current_player_num;
     QLineEdit *attack_input_y;
     QLabel *status_label;
+    QPushButton *multi_shot;
     QMenuBar *menubar;
     QMenu *menuBattleship;
     QStatusBar *statusbar;
@@ -104,13 +105,13 @@ public:
         label->setGeometry(QRect(320, 440, 161, 20));
         place_ship_1 = new QPushButton(centralwidget);
         place_ship_1->setObjectName(QString::fromUtf8("place_ship_1"));
-        place_ship_1->setGeometry(QRect(310, 520, 80, 18));
+        place_ship_1->setGeometry(QRect(310, 520, 80, 31));
         ship_input_x = new QLineEdit(centralwidget);
         ship_input_x->setObjectName(QString::fromUtf8("ship_input_x"));
         ship_input_x->setGeometry(QRect(360, 490, 31, 20));
         start_game = new QPushButton(centralwidget);
         start_game->setObjectName(QString::fromUtf8("start_game"));
-        start_game->setGeometry(QRect(360, 397, 91, 31));
+        start_game->setGeometry(QRect(360, 400, 91, 31));
         Quit_Game = new QPushButton(centralwidget);
         Quit_Game->setObjectName(QString::fromUtf8("Quit_Game"));
         Quit_Game->setGeometry(QRect(710, 10, 80, 31));
@@ -131,7 +132,7 @@ public:
         hide_board_2->setGeometry(QRect(710, 90, 80, 31));
         place_ship_2 = new QPushButton(centralwidget);
         place_ship_2->setObjectName(QString::fromUtf8("place_ship_2"));
-        place_ship_2->setGeometry(QRect(410, 520, 80, 18));
+        place_ship_2->setGeometry(QRect(410, 520, 80, 31));
         label_2 = new QLabel(centralwidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setGeometry(QRect(350, 470, 61, 20));
@@ -147,6 +148,9 @@ public:
         status_label = new QLabel(centralwidget);
         status_label->setObjectName(QString::fromUtf8("status_label"));
         status_label->setGeometry(QRect(330, 30, 321, 21));
+        multi_shot = new QPushButton(centralwidget);
+        multi_shot->setObjectName(QString::fromUtf8("multi_shot"));
+        multi_shot->setGeometry(QRect(360, 300, 80, 41));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -187,6 +191,7 @@ public:
         label_3->setText(QCoreApplication::translate("MainWindow", "Row", nullptr));
         current_player_num->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         status_label->setText(QString());
+        multi_shot->setText(QCoreApplication::translate("MainWindow", "Multi-Shot", nullptr));
         menuBattleship->setTitle(QCoreApplication::translate("MainWindow", "Battleship", nullptr));
     } // retranslateUi
 
