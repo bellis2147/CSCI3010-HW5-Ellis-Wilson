@@ -47,6 +47,8 @@ private:
     bool quit_;
     Player* player_1_;
     Player* player_2_;
+    std::vector<Item*> shot_one_;
+    std::vector<Item*> shot_two_;
 
     Game *game_;
 };

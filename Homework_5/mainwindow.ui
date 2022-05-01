@@ -115,7 +115,7 @@
       <x>360</x>
       <y>250</y>
       <width>80</width>
-      <height>18</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -197,7 +197,7 @@
       <x>710</x>
       <y>10</y>
       <width>80</width>
-      <height>18</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -220,7 +220,7 @@
       <x>10</x>
       <y>90</y>
       <width>80</width>
-      <height>18</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -230,10 +230,10 @@
    <widget class="QPushButton" name="show_board_1">
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>209</x>
       <y>90</y>
-      <width>80</width>
-      <height>18</height>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -243,10 +243,10 @@
    <widget class="QPushButton" name="show_board_2">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>499</x>
       <y>90</y>
-      <width>80</width>
-      <height>18</height>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -259,7 +259,7 @@
       <x>710</x>
       <y>90</y>
       <width>80</width>
-      <height>18</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -308,7 +308,7 @@
    <widget class="QLabel" name="current_player_num">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>450</x>
       <y>150</y>
       <width>37</width>
       <height>12</height>
@@ -328,6 +328,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="status_label">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>30</y>
+      <width>321</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -335,7 +348,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuBattleship">
