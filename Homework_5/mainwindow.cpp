@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     view_2_ = ui_ ->plotGraphicsView_2;
     view_3_ = ui_ ->ships_view;
     view_4_ = ui_ ->ships_view_2;
-
+    board_1_hit_items = 0;
+    board_2_hit_items = 0;
     scene_ = new QGraphicsScene;
     scene_2_ = new QGraphicsScene;
     scene_3_ = new QGraphicsScene;
@@ -253,6 +254,7 @@ void MainWindow::StartGameSlot(){
         ui_->status_label->setText("Game started");
         ui_->current_player_num->setText("1");
         ui_->enter_button->show();
+        ui_->show_board_1->show();
         game_started = true;
 
         delete scene_3_;
@@ -273,7 +275,9 @@ void MainWindow::AttackSlot(){
     }
     if(ui_->current_player_num->text() == "1"){
         std::string new_x = ui_->attack_input_x->text().toStdString();
-        ui_->show_board_1->show();
+        ui_->show_board_2->show();
+        ui_->show_board_1->hide();
+        HideBoard1Slot();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
 
         int new_x_int = letterToNumber(new_x);
@@ -302,9 +306,11 @@ void MainWindow::AttackSlot(){
                         if(player_2_->get_items()[i]->get_tiletype() == ship)
                         {
                             Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
+                            player_2_->remove_item(i);
                             shot_two_.push_back(hit_item);
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
+                            board_2_hit_items++;
                         }
                         else if(player_2_->get_items()[i]->get_tiletype() == chest)
                         {
@@ -316,6 +322,7 @@ void MainWindow::AttackSlot(){
                             shot_two_.push_back(hit_item);
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Found a Treasure Chest!");
+                            board_2_hit_items++;
                         }
                         else if(player_2_->get_items()[i]->get_tiletype() == mine)
                         {
@@ -325,6 +332,7 @@ void MainWindow::AttackSlot(){
                             shot_two_.push_back(hit_item);
                             scene_2_->addItem(hit_item);
                              ui_->status_label->setText("Hit a Mine!");
+                             board_2_hit_items++;
                         }
 
                         check_hit++;
@@ -338,6 +346,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                     else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
@@ -346,6 +355,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                 }
@@ -356,6 +366,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                     else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
@@ -363,6 +374,7 @@ void MainWindow::AttackSlot(){
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
                         check_hit++;
                         break;
                     }
@@ -371,6 +383,7 @@ void MainWindow::AttackSlot(){
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
                         check_hit++;
                         break;
                     }
@@ -382,6 +395,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                     else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
@@ -389,6 +403,7 @@ void MainWindow::AttackSlot(){
                         shot_two_.push_back(hit_item);
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
+                        board_2_hit_items++;
                         check_hit++;
                         break;
                     }
@@ -400,6 +415,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                     else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
@@ -408,6 +424,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                     else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+58){
@@ -416,6 +433,7 @@ void MainWindow::AttackSlot(){
                         scene_2_->addItem(hit_item);
                         ui_->status_label->setText("Hit a Ship!");
                         check_hit++;
+                        board_2_hit_items++;
                         break;
                     }
                 }
@@ -426,6 +444,12 @@ void MainWindow::AttackSlot(){
                 shot_two_.push_back(missed_item);
                 ui_->status_label->setText("Miss!");
             }
+            if(board_2_hit_items == 15){
+                ui_->status_label->setText("Game won by Player 1!");
+                ui_->enter_button->hide();
+                ShowBoard1Slot();
+                ShowBoard2Slot();
+            }
 
             ui_->current_player_num->setText("2");
         }
@@ -433,7 +457,9 @@ void MainWindow::AttackSlot(){
     }
     else{
         std::string new_x = ui_->attack_input_x->text().toStdString();
-        ui_->show_board_2->show();
+        ui_->show_board_1->show();
+        ui_->show_board_2->hide();
+        HideBoard2Slot();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
 
         int new_x_int = letterToNumber(new_x);
@@ -466,6 +492,7 @@ void MainWindow::AttackSlot(){
                                 shot_two_.push_back(hit_item);
                                 scene_2_->addItem(hit_item);
                                 ui_->status_label->setText("Hit a Ship!");
+                                board_1_hit_items++;
                             }
                             else if(player_2_->get_items()[i]->get_tiletype() == chest)
                             {
@@ -477,6 +504,7 @@ void MainWindow::AttackSlot(){
                                 shot_two_.push_back(hit_item);
                                 scene_2_->addItem(hit_item);
                                 ui_->status_label->setText("Found a Treasure Chest!");
+                                board_1_hit_items++;
                             }
                             else if(player_2_->get_items()[i]->get_tiletype() == mine)
                             {
@@ -486,6 +514,7 @@ void MainWindow::AttackSlot(){
                                 shot_two_.push_back(hit_item);
                                 scene_2_->addItem(hit_item);
                                  ui_->status_label->setText("Hit a Mine!");
+                                 board_1_hit_items++;
                             }
 
                             check_hit++;
@@ -499,6 +528,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
@@ -507,6 +537,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                     }
@@ -517,6 +548,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y()+29 && new_x_int == player_2_->get_items()[i]->get_x()){
@@ -525,6 +557,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y()+58 && new_x_int == player_2_->get_items()[i]->get_x()){
@@ -533,6 +566,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                     }
@@ -543,6 +577,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
@@ -551,6 +586,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                     }
@@ -561,6 +597,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+29){
@@ -569,6 +606,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                         else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+58){
@@ -577,6 +615,7 @@ void MainWindow::AttackSlot(){
                             scene_2_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
+                            board_1_hit_items++;
                             break;
                         }
                 }
@@ -587,6 +626,13 @@ void MainWindow::AttackSlot(){
                      ui_->status_label->setText("Miss!");
                 }
                 ui_->current_player_num->setText("1");
+                if (board_1_hit_items == 15){
+                    ui_->status_label->setText("Game won by player 2!");
+                    ui_->enter_button->hide();
+                    ShowBoard1Slot();
+                    ShowBoard2Slot();
+                }
+
             }
         }
     }

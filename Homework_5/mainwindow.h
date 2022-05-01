@@ -51,6 +51,8 @@ private:
     std::vector<Item*> shot_two_;
     int items_placed;
     bool game_started;
+    int board_1_hit_items;
+    int board_2_hit_items;
 
     Game *game_;
 };
