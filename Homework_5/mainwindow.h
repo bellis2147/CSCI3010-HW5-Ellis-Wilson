@@ -32,7 +32,6 @@ private slots:
     void ShowBoard2Slot();
     void StartGameSlot();
     void AttackSlot();
-    void start_game();
 private:
     Ui::MainWindow *ui_;
     QGraphicsView *view_;
@@ -43,12 +42,15 @@ private:
     QGraphicsScene *scene_3_;
     QGraphicsView *view_4_;
     QGraphicsScene *scene_4_;
+
     Item * curr_item_;
     bool quit_;
     Player* player_1_;
     Player* player_2_;
     std::vector<Item*> shot_one_;
     std::vector<Item*> shot_two_;
+    int items_placed;
+    bool game_started;
 
     Game *game_;
 };

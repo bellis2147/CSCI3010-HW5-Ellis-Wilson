@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
 {
+
+    items_placed = 0;
+    game_started = false;
+
     ui_->setupUi(this);
     view_ = ui_->plotGraphicsView;
     view_2_ = ui_ ->plotGraphicsView_2;
@@ -187,22 +191,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui_->start_game, &QAbstractButton::pressed, this, &MainWindow::StartGameSlot);
     connect(ui_->enter_button, &QAbstractButton::pressed, this, &MainWindow::AttackSlot);
 }
-/*
-void MainWindow::Game_Loop(){
-    Tile curr_tile;
-    while(!quit_)
-    {
-        connect(ui_->place_ship_buttton, &QAbstractButton::pressed, this, &MainWindow::PlaceItemSlot);
-        connect(ui_->Quit_Game, &QAbstractButton::pressed, this, &MainWindow::QuitSlot);
 
-        curr_tile = game_->get_tile(1, 10, 10);
-        if(curr_tile.type == ship)
-        {
-
-        }
-    }
-}
-*/
 int letterToNumber(std::string new_x)
 {
     int new_x_int = 1;
@@ -238,26 +227,37 @@ void MainWindow::ItemSelectedSlot(Item *p) {
 void MainWindow::HideBoard1Slot(){
     for (int i = 0; i < player_1_->get_items().size(); i++)
     {
-
-        //else if(player_1_->get_items()[i] != nullptr)
-        //{
             scene_->removeItem(player_1_->get_items()[i]);
-        //}
     }
 }
 void MainWindow::HideBoard2Slot(){
     for (int i = 0; i < player_2_->get_items().size(); i++)
     {
-        //f(player_2_->get_items()[i] != nullptr)
-        //{
             scene_2_->removeItem(player_2_->get_items()[i]);
-        //}
     }
 }
 void MainWindow::StartGameSlot(){
-    ui_->current_player_num->setText("1");
+    if(items_placed >= 18)
+    {
+        ui_->status_label->setText("Game started");
+        ui_->current_player_num->setText("1");
+        game_started == true;
+
+        delete scene_3_;
+        delete scene_4_;
+    }
+    else
+    {
+        ui_->status_label->setText("place all items first");
+    }
+
 }
 void MainWindow::AttackSlot(){
+    if(game_started == false)
+    {
+        ui_->status_label->setText("place all items first");
+        return;
+    }
     if(ui_->current_player_num->text() == "1"){
         std::string new_x = ui_->attack_input_x->text().toStdString();
         int new_y = (ui_->attack_input_y->text().toInt())*29;
@@ -445,6 +445,8 @@ void MainWindow::PlaceItemSlot1() {
         curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
         scene_3_->removeItem(curr_item_);
         scene_->addItem(curr_item_);
+
+        items_placed++;
     }
 
 }
@@ -462,12 +464,9 @@ void MainWindow::PlaceItemSlot2() {
         curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
         scene_4_->removeItem(curr_item_);
         scene_2_->addItem(curr_item_);
-    }
 
-}
-void MainWindow::start_game()
-{
-    game_ = new Game();
+        items_placed++;
+    }
 
 }
 
