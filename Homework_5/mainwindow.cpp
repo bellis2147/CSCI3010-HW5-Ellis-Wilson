@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::MainWindow)
 {
-
+    curr_item_ = NULL;
     items_placed = 0;
     game_started = false;
 
@@ -197,12 +197,12 @@ int letterToNumber(std::string new_x)
     return new_x_int;
 }
 void MainWindow::ItemSelectedSlot(Item *p) {
-    if (p != curr_item_){
+    if (p != curr_item_ && curr_item_ != NULL){
         curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
         scene_3_->update();
         scene_4_->update();
-        curr_item_ = p;
     }
+    curr_item_ = p;
 }
 void MainWindow::HideBoard1Slot(){
     int get_items_size =  player_1_->get_items().size();
@@ -432,10 +432,8 @@ void MainWindow::AttackSlot(){
                 ShowBoard1Slot();
                 ShowBoard2Slot();
             }
-
             ui_->current_player_num->setText("2");
         }
-
     }
     else{
         std::string new_x = ui_->attack_input_x->text().toStdString();
@@ -612,16 +610,15 @@ void MainWindow::AttackSlot(){
                     scene_->addItem(missed_item);
                      ui_->status_label->setText("Miss!");
                 }
-                ui_->current_player_num->setText("1");
+
+            }
                 if (board_1_hit_items == 15){
                     ui_->status_label->setText("Game won by player 2!");
                     ui_->enter_button->hide();
                     ShowBoard1Slot();
                     ShowBoard2Slot();
                 }
-
-            }
-          ui_->attack_input_y->text() = '1';
+            ui_->current_player_num->setText("1");
         }
     }
 
@@ -799,7 +796,11 @@ void MainWindow::PlaceItemSlot1() {
             connect(chest_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
             connect(mine_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
             player_2_ = new Player({ship_6,ship_7,ship_8,ship_9,ship_10,mine_3,mine_4,chest_3,chest_4});
+            ui_->ship_input_y->clear();
+            ui_->ship_input_x->clear();
         }
+        curr_item_ = NULL;
+
     }
 
 }
@@ -825,8 +826,12 @@ void MainWindow::PlaceItemSlot2() {
             ui_->place_ship_2->hide();
             HideBoard2Slot();
             ui_->show_board_2->hide();
+            ui_->ship_input_y->clear();
+            ui_->ship_input_x->clear();
         }
+
     }
+    curr_item_ = NULL;
 
 }
 

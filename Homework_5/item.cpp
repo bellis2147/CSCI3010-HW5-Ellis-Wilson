@@ -40,7 +40,6 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
     // Day 3, Task 1
     // Change the color of the point when the user clicks on it
 
-     prev_tile_ = tile_;
     // change to a new color
      if(x_ %29 != 0){
         tile_ = selected;
@@ -97,7 +96,7 @@ void Item::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             painter->setBrush(QBrush(QColor(255,255,0)));
             break;
         case hit_mine:
-            painter->setBrush(QBrush(QColor(250,250,250)));
+            painter->setBrush(QBrush(QColor(0,0,0)));
             break;
         case selected:
             painter->setBrush(QBrush(QColor(0,191,255)));
