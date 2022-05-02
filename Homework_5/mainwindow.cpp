@@ -121,18 +121,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene_3_->addItem(mine_2);
 
 
-    //initialize player 2 items
-    Item * ship_6 = new Item(ship, 1, 1, 29, 87);
-    Item * ship_7 = new Item(ship, 39, 1, 87, 29);
-    Item * ship_8 = new Item(ship, 39, 39, 58, 29);
-    Item * ship_9 = new Item(ship, 136, 1, 29, 58);
-    Item * ship_10 = new Item(ship, 102, 39, 29, 29);
 
-    Item * chest_3 = new Item(chest, 184, 1, 29, 29);
-    Item * chest_4 = new Item(chest, 184, 39, 29, 29);
-
-    Item * mine_3 = new Item(mine, 223, 1, 29, 29);
-    Item * mine_4 = new Item(mine, 223, 39, 29, 29);
     /*
     Item * ship_6 = new Item(ship,color, 0, 0, 29, 87);
     Item * ship_7 = new Item(ship,color, 39, 0, 87, 29);
@@ -147,15 +136,6 @@ MainWindow::MainWindow(QWidget *parent)
     Item * mine_4 = new Item(mine, color_mine, 223, 39, 29, 29);
     */
     // add these to the scene for player 2
-    scene_4_->addItem(ship_6);
-    scene_4_->addItem(ship_7);
-    scene_4_->addItem(ship_8);
-    scene_4_->addItem(ship_9);
-    scene_4_->addItem(ship_10);
-    scene_4_->addItem(chest_3);
-    scene_4_->addItem(chest_4);
-    scene_4_->addItem(mine_3);
-    scene_4_->addItem(mine_4);
     quit_ = false;
 
     connect(ship_1, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
@@ -163,21 +143,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ship_3, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(ship_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(ship_5, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(ship_6, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(ship_7, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(ship_8, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(ship_9, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(ship_10, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(chest_1, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(mine_1, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(chest_2, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     connect(mine_2, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(chest_3, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(mine_3, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(chest_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
-    connect(mine_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
     player_1_ = new Player({ship_1,ship_2,ship_3,ship_4,ship_5,mine_1,mine_2,chest_1,chest_2});
-    player_2_ = new Player({ship_6,ship_7,ship_8,ship_9,ship_10,mine_3,mine_4,chest_3,chest_4});
 
 
     ui_->multi_shot->hide();
@@ -227,7 +197,12 @@ int letterToNumber(std::string new_x)
     return new_x_int;
 }
 void MainWindow::ItemSelectedSlot(Item *p) {
-    curr_item_ = p;
+    if (p != curr_item_){
+        curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
+        scene_3_->update();
+        scene_4_->update();
+        curr_item_ = p;
+    }
 }
 void MainWindow::HideBoard1Slot(){
     int get_items_size =  player_1_->get_items().size();
@@ -250,6 +225,14 @@ void MainWindow::StartGameSlot(){
         ui_->current_player_num->setText("1");
         ui_->enter_button->show();
         ui_->show_board_1->show();
+        ui_->place_ship_1->hide();
+        ui_->place_ship_2->hide();
+        ui_->label->hide();
+        ui_->label_2->hide();
+        ui_->label_3->hide();
+        ui_->ship_input_x->hide();
+        ui_->ship_input_y->hide();
+        ui_->start_game->hide();
         game_started = true;
 
         delete scene_3_;
@@ -526,7 +509,7 @@ void MainWindow::AttackSlot(){
                         }
                     }
                     else if (player_1_->get_items()[i]->get_height() == 58 && player_1_->get_items()[i]->get_width() == 29){
-                        if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
                             Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                             shot_one_.push_back(hit_item);
                             scene_->addItem(hit_item);
@@ -546,7 +529,7 @@ void MainWindow::AttackSlot(){
                         }
                     }
                     else if (player_1_->get_items()[i]->get_height() == 87 && player_1_->get_items()[i]->get_width() == 29){
-                        if(new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x() ){
+                        if(new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x() ){
                             Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                             shot_one_.push_back(hit_item);
                             scene_->addItem(hit_item);
@@ -606,14 +589,14 @@ void MainWindow::AttackSlot(){
                         }
                         else if (new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x()+29){
                             Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
-                            shot_two_.push_back(hit_item);
-                            scene_2_->addItem(hit_item);
+                            shot_one_.push_back(hit_item);
+                            scene_->addItem(hit_item);
                             ui_->status_label->setText("Hit a Ship!");
                             check_hit++;
                             board_1_hit_items++;
                             break;
                         }
-                        else if (new_y == player_2_->get_items()[i]->get_y() && new_x_int == player_2_->get_items()[i]->get_x()+58){
+                        else if (new_y == player_1_->get_items()[i]->get_y() && new_x_int == player_1_->get_items()[i]->get_x()+58){
                             Item* hit_item = new Item(hit_ship, new_x_int, new_y, 29, 29);
                             shot_one_.push_back(hit_item);
                             scene_->addItem(hit_item);
@@ -762,6 +745,7 @@ void MainWindow::ShowBoard2Slot(){
 void MainWindow::PlaceItemSlot1() {
     if (curr_item_ != NULL)
     {
+        scene_3_->removeItem(curr_item_);
         std::string new_x = ui_->ship_input_x->text().toStdString();
         int new_y = (ui_->ship_input_y->text().toInt())*29;
 
@@ -771,7 +755,7 @@ void MainWindow::PlaceItemSlot1() {
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);
         curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
-        scene_3_->removeItem(curr_item_);
+
         scene_->addItem(curr_item_);
 
         items_placed++;
@@ -781,6 +765,40 @@ void MainWindow::PlaceItemSlot1() {
             ui_->place_ship_2->show();
             ui_->show_board_1->hide();
             HideBoard1Slot();
+            //initialize player 2 items
+            Item * ship_6 = new Item(ship, 1, 1, 29, 87);
+            Item * ship_7 = new Item(ship, 39, 1, 87, 29);
+            Item * ship_8 = new Item(ship, 39, 39, 58, 29);
+            Item * ship_9 = new Item(ship, 136, 1, 29, 58);
+            Item * ship_10 = new Item(ship, 102, 39, 29, 29);
+
+            Item * chest_3 = new Item(chest, 184, 1, 29, 29);
+            Item * chest_4 = new Item(chest, 184, 39, 29, 29);
+
+            Item * mine_3 = new Item(mine, 223, 1, 29, 29);
+            Item * mine_4 = new Item(mine, 223, 39, 29, 29);
+            //add these to the scene for player 2
+            scene_4_->addItem(ship_6);
+            scene_4_->addItem(ship_7);
+            scene_4_->addItem(ship_8);
+            scene_4_->addItem(ship_9);
+            scene_4_->addItem(ship_10);
+            scene_4_->addItem(chest_3);
+            scene_4_->addItem(chest_4);
+            scene_4_->addItem(mine_3);
+            scene_4_->addItem(mine_4);
+
+            //connect them so they can be selected and create player 2
+            connect(ship_6, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(ship_7, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(ship_8, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(ship_9, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(ship_10, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(chest_3, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(mine_3, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(chest_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            connect(mine_4, &Item::ItemSelected, this, &MainWindow::ItemSelectedSlot);
+            player_2_ = new Player({ship_6,ship_7,ship_8,ship_9,ship_10,mine_3,mine_4,chest_3,chest_4});
         }
     }
 
@@ -788,6 +806,7 @@ void MainWindow::PlaceItemSlot1() {
 void MainWindow::PlaceItemSlot2() {
     if (curr_item_ != NULL)
     {
+        scene_4_->removeItem(curr_item_);
         std::string new_x = ui_->ship_input_x->text().toStdString();
         int new_y = (ui_->ship_input_y->text().toInt())*29;
 
@@ -797,7 +816,7 @@ void MainWindow::PlaceItemSlot2() {
         curr_item_->set_y(new_y);
         curr_item_->set_x(new_x_int);
         curr_item_->set_tiletype(curr_item_->get_prev_tiletype());
-        scene_4_->removeItem(curr_item_);
+
         scene_2_->addItem(curr_item_);
 
         items_placed++;

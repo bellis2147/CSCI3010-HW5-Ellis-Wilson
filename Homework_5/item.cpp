@@ -37,9 +37,6 @@ void Item::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     qDebug() << "item selected!";
 
-    emit DeleteItem(this);
-
-
     // Day 3, Task 1
     // Change the color of the point when the user clicks on it
 
